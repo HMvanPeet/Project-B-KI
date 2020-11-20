@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>proj1-search-python3</Name>
     <RootNamespace>proj1-search-python3</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

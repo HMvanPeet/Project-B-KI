@@ -18,6 +18,12 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from game import Directions
+
+s = Directions.SOUTH
+w = Directions.WEST
+n = Directions.NORTH
+e = Directions.EAST
 
 class SearchProblem:
     """
@@ -67,9 +73,6 @@ def tinyMazeSearch(problem):
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
@@ -87,6 +90,38 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    visited = []
+    route = []
+    boolcheck = False
+
+    for next in problem.getSuccessors(problem.getStartState()):
+        visited.append(problem.getStartState())
+        if not boolcheck:
+            depthFirstSearchUtil(next)
+
+
+    def depthFirstSearchUtil(problemStep):
+        addRoute(problemStep)
+        if problem.isGoalState(problemStep):
+            boolcheck = True
+        if not boolcheck:
+            if problemStep[0] not in visited:
+                visited.append(problemStep[0])
+                for successor in problemStep.getSuccessors():
+                    depthFirstSearchUtil(successor[0])
+                route.pop()
+
+    def addRoute(locatie):
+        if locatie[1] == 'South':
+            route.append(s)
+        elif locatie[1] == 'West':
+            route.append(w)
+        elif locatie[1] == 'East':
+            route.append(e)
+        elif locatie[1] == 'North':
+            route.append(n)
+
+    return route
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
