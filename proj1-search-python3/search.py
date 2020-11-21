@@ -104,6 +104,25 @@ def depthFirstSearch(problem):
     currentNode = problem.getStartState()
     check = False 
     
+    def addOpenList(parent):
+        children = problem.getSuccessors(parent[0])
+        if children == []:
+            route.pop()
+            closedList.append(currentNode)
+            check = generateOptions()
+        for child in children:
+            if child[0] in closedList:
+                pass
+            elif not child in openList.list:
+                print(openList.list)
+                openList.push(child)
+                print(openList.list)
+                closedList.append(parent[0])
+        check = generateOptions()
+        if check:
+            return check
+        route.pop()
+
     def generateOptions():
         while not openList.isEmpty():
             currentNode = openList.pop()
@@ -113,28 +132,12 @@ def depthFirstSearch(problem):
                 print("We have won")
                 print(route)
                 return True
-                
-            else:
-                children = problem.getSuccessors(currentNode[0])
-                if children == []:
-                    route.pop()
-                    closedList.append(currentNode)
-                    check = generateOptions()
-                
-                for child in children:
-                    if child in closedList:
-                        pass
-                    elif not child in openList.list:
-                        openList.push(child)
-            closedList.append(currentNode)
-            check = generateOptions()
+            check = addOpenList(currentNode)
             return check
                 
             
-                   
-
-    
 # we start the search from the startstate
+    print(currentNode)
     if problem.isGoalState(problem.getStartState):
         print("The startpoint is your goal")
         return route
@@ -146,7 +149,6 @@ def depthFirstSearch(problem):
             elif not child in openList.list:
                 openList.push(child)
         closedList.append(currentNode)
-
         #we make a recursive function 
         check = generateOptions()
 
