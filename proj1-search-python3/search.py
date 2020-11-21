@@ -90,39 +90,78 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    visited = []
+    from util import Stack
+    # from game import Directions
+    # s = Directions.SOUTH
+    # w = Directions.WEST
+    # e = Directions.EAST
+    # n = Directions.NORTH
+    # direction = {'South' : s, 'West' : w, 'East' : e, 'North' : n}
+
+    openList = Stack()
+    closedList = []
     route = []
-    boolcheck = False
+    currentNode = problem.getStartState()
+    check = False 
+    
+    def generateOptions():
+        while not openList.isEmpty():
+            currentNode = openList.pop()
+            route.append(currentNode[1])
 
-    for next in problem.getSuccessors(problem.getStartState()):
-        visited.append(problem.getStartState())
-        if not boolcheck:
-            depthFirstSearchUtil(next)
+            if problem.isGoalState(currentNode[0]):
+                print("We have won")
+                print(route)
+                return True
+                
+            else:
+                children = problem.getSuccessors(currentNode[0])
+                if children == []:
+                    route.pop()
+                    closedList.append(currentNode)
+                    check = generateOptions()
+                
+                for child in children:
+                    if child in closedList:
+                        pass
+                    elif not child in openList.list:
+                        openList.push(child)
+            closedList.append(currentNode)
+            check = generateOptions()
+            return check
+                
+            
+                   
 
+    
+# we start the search from the startstate
+    if problem.isGoalState(problem.getStartState):
+        print("The startpoint is your goal")
+        return route
+    else:
+        children = problem.getSuccessors(currentNode)
+        for child in children:
+            if child in closedList:
+                pass
+            elif not child in openList.list:
+                openList.push(child)
+        closedList.append(currentNode)
 
-    def depthFirstSearchUtil(problemStep):
-        addRoute(problemStep)
-        if problem.isGoalState(problemStep):
-            boolcheck = True
-        if not boolcheck:
-            if problemStep[0] not in visited:
-                visited.append(problemStep[0])
-                for successor in problemStep.getSuccessors():
-                    depthFirstSearchUtil(successor[0])
-                route.pop()
+        #we make a recursive function 
+        check = generateOptions()
 
-    def addRoute(locatie):
-        if locatie[1] == 'South':
-            route.append(s)
-        elif locatie[1] == 'West':
-            route.append(w)
-        elif locatie[1] == 'East':
-            route.append(e)
-        elif locatie[1] == 'North':
-            route.append(n)
-
-    return route
+    if check:
+        print("And thats game")
+        return route
+    else:
+        print("We have failed")
+        return 
     util.raiseNotDefined()
+                
+
+
+
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
