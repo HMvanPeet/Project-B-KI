@@ -91,73 +91,36 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     from util import Stack
-    # from game import Directions
-    # s = Directions.SOUTH
-    # w = Directions.WEST
-    # e = Directions.EAST
-    # n = Directions.NORTH
-    # direction = {'South' : s, 'West' : w, 'East' : e, 'North' : n}
 
     openList = Stack()
-    closedList = []
-    route = []
-    currentNode = problem.getStartState()
-    check = False 
-    
-    def addOpenList(parent):
-        children = problem.getSuccessors(parent[0])
-        if children == []:
-            route.pop()
-            closedList.append(currentNode)
-            check = generateOptions()
-        for child in children:
-            if child[0] in closedList:
-                pass
-            elif not child in openList.list:
-                print(openList.list)
-                openList.push(child)
-                print(openList.list)
-                closedList.append(parent[0])
-        check = generateOptions()
-        if check:
-            return check
-        route.pop()
+    closedList = {}
+    currentNode = [problem.getStartState(), "Start", "non"]
 
-    def generateOptions():
-        while not openList.isEmpty():
-            currentNode = openList.pop()
-            route.append(currentNode[1])
-
-            if problem.isGoalState(currentNode[0]):
-                print("We have won")
-                print(route)
-                return True
-            check = addOpenList(currentNode)
-            return check
-                
-            
-# we start the search from the startstate
-    print(currentNode)
-    if problem.isGoalState(problem.getStartState):
+    #start state could be a goal state        
+    if problem.isGoalState(currentNode):
         print("The startpoint is your goal")
-        return route
-    else:
-        children = problem.getSuccessors(currentNode)
-        for child in children:
-            if child in closedList:
-                pass
-            elif not child in openList.list:
-                openList.push(child)
-        closedList.append(currentNode)
-        #we make a recursive function 
-        check = generateOptions()
+        return []
 
-    if check:
-        print("And thats game")
-        return route
-    else:
-        print("We have failed")
-        return 
+    openList.push(currentNode)
+    while not openList.isEmpty():
+        currentNode = openList.pop()
+        closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
+        children = problem.getSuccessors(currentNode[0])
+        for child in children:
+            if problem.isGoalState(child[0]):                       #first complete path is enough (not shortest)
+                route = []
+                route.append(child[1])                              #add last action to child
+                reached = currentNode[0]                            #parent node
+                while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+                    route.insert(0, closedList[reached]['movement'])
+                    reached = closedList[reached]['from']
+                return route
+            elif not child in openList.list:                        #add child as new option to list
+                if not child[0] in closedList:
+                    openList.push([child[0], currentNode[0], child[1]])
+        
+
+
     util.raiseNotDefined()
                 
 
