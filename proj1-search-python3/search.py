@@ -90,43 +90,78 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    visited = []
-    route = []
-    boolcheck = False
+    from util import Stack
 
-    for next in problem.getSuccessors(problem.getStartState()):
-        visited.append(problem.getStartState())
-        if not boolcheck:
-            depthFirstSearchUtil(next)
+    openList = Stack()
+    closedList = {}
+    currentNode = [problem.getStartState(), "Start", "non"]
+
+    #start state could be a goal state        
+    if problem.isGoalState(currentNode):
+        print("The startpoint is your goal")
+        return []
+
+    openList.push(currentNode)
+    while not openList.isEmpty():
+        currentNode = openList.pop()
+        closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
+        children = problem.getSuccessors(currentNode[0])
+        for child in children:
+            if problem.isGoalState(child[0]):                       #first complete path is enough (not shortest)
+                route = []
+                route.append(child[1])                              #add last action to child
+                reached = currentNode[0]                            #parent node
+                while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+                    route.insert(0, closedList[reached]['movement'])
+                    reached = closedList[reached]['from']
+                return route
+            elif not child in openList.list:                        #add child as new option to list
+                if not child[0] in closedList:
+                    openList.push([child[0], currentNode[0], child[1]])
+        
 
 
-    def depthFirstSearchUtil(problemStep):
-        addRoute(problemStep)
-        if problem.isGoalState(problemStep):
-            boolcheck = True
-        if not boolcheck:
-            if problemStep[0] not in visited:
-                visited.append(problemStep[0])
-                for successor in problemStep.getSuccessors():
-                    depthFirstSearchUtil(successor[0])
-                route.pop()
-
-    def addRoute(locatie):
-        if locatie[1] == 'South':
-            route.append(s)
-        elif locatie[1] == 'West':
-            route.append(w)
-        elif locatie[1] == 'East':
-            route.append(e)
-        elif locatie[1] == 'North':
-            route.append(n)
-
-    return route
     util.raiseNotDefined()
+                
+
+
+
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    from util import Queue
+
+    openList = Queue()              #Queue instead of Stack
+    closedList = {}
+    currentNode = [problem.getStartState(), "Start", "non"]
+
+    #start state could be a goal state        
+    if problem.isGoalState(currentNode):
+        print("The startpoint is your goal")
+        return []
+
+    openList.push(currentNode)
+    while not openList.isEmpty():
+        currentNode = openList.pop()
+        closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
+        children = problem.getSuccessors(currentNode[0])
+        for child in children:
+            if problem.isGoalState(child[0]):                       #first complete path is enough (not shortest)
+                route = []
+                route.append(child[1])                              #add last action to child
+                reached = currentNode[0]                            #parent node
+                while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+                    route.insert(0, closedList[reached]['movement'])
+                    reached = closedList[reached]['from']
+                return route
+            elif not child in openList.list:                        #add child as new option to list
+                if not child[0] in closedList:
+                    openList.push([child[0], currentNode[0], child[1]])
+        
+
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
