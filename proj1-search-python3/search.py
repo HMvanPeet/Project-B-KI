@@ -129,7 +129,7 @@ def breadthFirstSearch(problem):
 
     openList = Queue()
     closedList = {}
-    currentNode = [problem.getStartState(), (-1,-1), "non"]
+    currentNode = [problem.getStartState(), "Start", "non"]
 
     openList.push(currentNode)
     while not openList.isEmpty():
