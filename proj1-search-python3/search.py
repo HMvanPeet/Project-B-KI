@@ -144,6 +144,8 @@ def breadthFirstSearch(problem):
     openList.push(currentNode)
     while not openList.isEmpty():
         currentNode = openList.pop()
+        if currentNode[0] in closedList:
+            continue
         closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
         if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
             route = []
@@ -155,9 +157,8 @@ def breadthFirstSearch(problem):
             return route
         children = problem.getSuccessors(currentNode[0])
         for child in children:
-            if not child[0] in openList.list:
-                if not child[0] in closedList:
-                    openList.push([child[0], currentNode[0], child[1]])
+            if not child[0] in closedList:
+                openList.push([child[0], currentNode[0], child[1]])
         
 
 
