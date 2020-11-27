@@ -105,19 +105,19 @@ def depthFirstSearch(problem):
     while not openList.isEmpty():
         currentNode = openList.pop()
         closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
+        if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
+            route = []
+            route.append(currentNode[2])                              #add last action to child
+            reached = closedList[currentNode[0]]['from']
+            print(reached)                           #parent node
+            while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+                route.insert(0, closedList[reached]['movement'])
+                reached = closedList[reached]['from']
+            return route
         children = problem.getSuccessors(currentNode[0])
         for child in children:
-            if problem.isGoalState(child[0]):                       #first complete path is enough (not shortest)
-                route = []
-                route.append(child[1])                              #add last action to child
-                reached = currentNode[0]                            #parent node
-                while not closedList[reached]['from'] == "Start":   #only start node has start in that index
-                    route.insert(0, closedList[reached]['movement'])
-                    reached = closedList[reached]['from']
-                return route
-            elif not child in openList.list:                        #add child as new option to list
-                if not child[0] in closedList:
-                    openList.push([child[0], currentNode[0], child[1]])
+            if not child[0] in closedList:
+                openList.push([child[0], currentNode[0], child[1]])
         
 
 
@@ -133,7 +133,7 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import Queue
 
-    openList = Queue()              #Queue instead of Stack
+    openList = Queue()
     closedList = {}
     currentNode = [problem.getStartState(), "Start", "non"]
 
@@ -146,17 +146,18 @@ def breadthFirstSearch(problem):
     while not openList.isEmpty():
         currentNode = openList.pop()
         closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
+        if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
+            route = []
+            route.append(currentNode[2])                              #add last action to child
+            reached = closedList[currentNode[0]]['from']
+            print(reached)                           #parent node
+            while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+                route.insert(0, closedList[reached]['movement'])
+                reached = closedList[reached]['from']
+            return route
         children = problem.getSuccessors(currentNode[0])
         for child in children:
-            if problem.isGoalState(child[0]):                       #first complete path is enough (not shortest)
-                route = []
-                route.append(child[1])                              #add last action to child
-                reached = currentNode[0]                            #parent node
-                while not closedList[reached]['from'] == "Start":   #only start node has start in that index
-                    route.insert(0, closedList[reached]['movement'])
-                    reached = closedList[reached]['from']
-                return route
-            elif not child in openList.list:                        #add child as new option to list
+            if not child[0] in openList.list:
                 if not child[0] in closedList:
                     openList.push([child[0], currentNode[0], child[1]])
         
