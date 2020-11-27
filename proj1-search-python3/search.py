@@ -109,7 +109,7 @@ def depthFirstSearch(problem):
             route = []
             route.append(currentNode[2])                              #add last action to child
             reached = closedList[currentNode[0]]['from']         #parent node
-            while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+            while reached != problem.getStartState():   #only start node has start in that index
                 route.insert(0, closedList[reached]['movement'])
                 reached = closedList[reached]['from']
             return route
@@ -122,11 +122,6 @@ def depthFirstSearch(problem):
 
     util.raiseNotDefined()
                 
-
-
-
-    
-
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -135,11 +130,6 @@ def breadthFirstSearch(problem):
     openList = Queue()
     closedList = {}
     currentNode = [problem.getStartState(), "Start", "non"]
-
-    #start state could be a goal state        
-    if problem.isGoalState(currentNode):
-        print("The startpoint is your goal")
-        return []
 
     openList.push(currentNode)
     while not openList.isEmpty():
@@ -151,7 +141,7 @@ def breadthFirstSearch(problem):
             route = []
             route.append(currentNode[2])                              #add last action to child
             reached = closedList[currentNode[0]]['from']                   #parent node
-            while not closedList[reached]['from'] == "Start":   #only start node has start in that index
+            while reached != problem.getStartState():   #only start node has start in that index
                 route.insert(0, closedList[reached]['movement'])
                 reached = closedList[reached]['from']
             return route
