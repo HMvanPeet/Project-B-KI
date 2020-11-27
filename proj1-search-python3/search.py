@@ -108,8 +108,7 @@ def depthFirstSearch(problem):
         if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
             route = []
             route.append(currentNode[2])                              #add last action to child
-            reached = closedList[currentNode[0]]['from']
-            print(reached)                           #parent node
+            reached = closedList[currentNode[0]]['from']         #parent node
             while not closedList[reached]['from'] == "Start":   #only start node has start in that index
                 route.insert(0, closedList[reached]['movement'])
                 reached = closedList[reached]['from']
@@ -149,8 +148,7 @@ def breadthFirstSearch(problem):
         if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
             route = []
             route.append(currentNode[2])                              #add last action to child
-            reached = closedList[currentNode[0]]['from']
-            print(reached)                           #parent node
+            reached = closedList[currentNode[0]]['from']                   #parent node
             while not closedList[reached]['from'] == "Start":   #only start node has start in that index
                 route.insert(0, closedList[reached]['movement'])
                 reached = closedList[reached]['from']
