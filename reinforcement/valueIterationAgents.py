@@ -101,13 +101,18 @@ class ValueIterationAgent(ValueEstimationAgent):
         #From state S performing action A gives a reward
         # V* = value * change for every outcome
         #
+        actions = self.mdp.getAction(state)
+        if actions == ():
+            return None
+        bestAction = None
+        bestValue = -1
+        for action in actions:
+            qValue = self.computeQValueFromValues(state, action)
+            if qValue > bestValue:
+                bestValue = qValue
+                bestAction = action
 
-        for action in self.mdp.getAction(state):
-            for tState in self.mdp.getTransitionStatesAndProbs(state, action):
-                for nextState in tState:
-                    getValue(self, nextState)
-
-        return action
+        return bestAction
 
         util.raiseNotDefined()
 
