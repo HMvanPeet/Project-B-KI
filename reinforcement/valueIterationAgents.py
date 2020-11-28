@@ -62,17 +62,16 @@ class ValueIterationAgent(ValueEstimationAgent):
     def runValueIteration(self):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
-
-        for i in range(self.iterations):
+        
+        for k in range(self.iterations):                                            #new values are computed for k+1 on each iteration
             newValues = util.Counter()  
             for state in self.mdp.getStates():
-                action = self.computeActionFromValues(state)
+                action = self.computeActionFromValues(state)                        #find best action in this state
                 if action == None:
                     continue 
-                nextState = self.mdp.getTransitionStatesAndProbs(state, action)[0]
-                newValues[state] = self.computeQValueFromValues(state, action)   
+                newValues[state] = self.computeQValueFromValues(state, action)      #stores the new value for each state
             for state in newValues:
-                self.values[state] = newValues[state]
+                self.values[state] = newValues[state]                               #updates the values for each state
 
     def getValue(self, state):
         """
@@ -88,11 +87,12 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         "*** YOUR CODE HERE ***"
         qValue = 0
-        for outcome in self.mdp.getTransitionStatesAndProbs(state, action):
-            qValue += outcome[1] * ((self.mdp.getReward(state, action, outcome[0]) + (self.values[outcome[0]] * self.discount)))
+        for outcome in self.mdp.getTransitionStatesAndProbs(state, action):     #all possible outcomes for action are iterated             
+            instantReward = (self.mdp.getReward(state, action, outcome[0]))     #R(s,a,s')
+            futureReward = (self.values[outcome[0]] * self.discount)            #V*(s) * discount
+            qValue += outcome[1] * (instantReward + futureReward)               #Sum of all possible outcomes
         return qValue
 
-        
 
     def computeActionFromValues(self, state):
         """
@@ -104,14 +104,15 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        if self.mdp.isTerminal(state):
+        if self.mdp.isTerminal(state):                              
             return None
-        bestAction = None
-        bestValue = -999
-        for action in self.mdp.getPossibleActions(state):
-            qValue = self.computeQValueFromValues(state, action)
-            if qValue > bestValue:
-                bestValue = qValue
+        actions = self.mdp.getPossibleActions(state)
+        bestAction = actions[0]                                     #first action is set as best
+        bestValue = self.computeQValueFromValues(state, bestAction) #first action is set as best
+        for action in actions:                                      
+            qValue = self.computeQValueFromValues(state, action)    #computes the Qvalue for each action
+            if qValue > bestValue:                                  #selects the best action available
+                bestValue = qValue                                  #tie-breaker: first iterated action is chosen
                 bestAction = action
 
         return bestAction
