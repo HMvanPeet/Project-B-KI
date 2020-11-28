@@ -63,10 +63,16 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
 
-        #for i in range(self.iterations):
-        #    if 1 == 0:
-        #        continue
-            #kans op beste actie * [instant reward + future reward*discount]      
+        for i in range(self.iterations):
+            newValues = util.Counter()  
+            for state in self.mdp.getStates():
+                action = self.computeActionFromValues(state)
+                if action == None:
+                    continue 
+                nextState = self.mdp.getTransitionStatesAndProbs(state, action)[0]
+                newValues[state] = self.computeQValueFromValues(state, action)   
+            for state in newValues:
+                self.values[state] = newValues[state]
 
     def getValue(self, state):
         """
@@ -83,10 +89,10 @@ class ValueIterationAgent(ValueEstimationAgent):
         "*** YOUR CODE HERE ***"
         qValue = 0
         for outcome in self.mdp.getTransitionStatesAndProbs(state, action):
-            qValue += (self.mdp.getReward(state, action, outcome[0]) + self.values[outcome[0]]) * outcome[1]
+            qValue += outcome[1] * ((self.mdp.getReward(state, action, outcome[0]) + (self.values[outcome[0]] * self.discount)))
         return qValue
 
-        util.raiseNotDefined()
+        
 
     def computeActionFromValues(self, state):
         """
@@ -98,15 +104,11 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        #From state S performing action A gives a reward
-        # V* = value * change for every outcome
-        #
-        actions = self.mdp.getAction(state)
-        if actions == ():
+        if self.mdp.isTerminal(state):
             return None
         bestAction = None
-        bestValue = -1
-        for action in actions:
+        bestValue = -999
+        for action in self.mdp.getPossibleActions(state):
             qValue = self.computeQValueFromValues(state, action)
             if qValue > bestValue:
                 bestValue = qValue
@@ -114,7 +116,6 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         return bestAction
 
-        util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
