@@ -20,22 +20,22 @@
 # value iteration.
 
 def question2():
-    answerDiscount = 0.9
-    answerNoise = 0.2
+    answerDiscount = 0.9        #default = 0.9
+    answerNoise = 0.0           #default = 0.2
     return answerDiscount, answerNoise
 
 def question3a():
-    answerDiscount = None
-    answerNoise = None
-    answerLivingReward = None
+    answerDiscount = 1
+    answerNoise = 0.0
+    answerLivingReward = -5
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
 def question3b():
-    answerDiscount = None
-    answerNoise = None
-    answerLivingReward = None
-    return answerDiscount, answerNoise, answerLivingReward
+    answerDiscount = 1
+    answerNoise = 0.7
+    answerLivingReward = -0.76
+    return 'NOT POSSIBLE'#answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
 def question3c():
