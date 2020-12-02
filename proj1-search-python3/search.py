@@ -76,7 +76,7 @@ def graphSearch(problem, openList):
     openList.push(currentNode)
 
     #start state could be a goal state        
-    if problem.isGoalState(currentNode):
+    if problem.isGoalState(state):
         print("The startpoint is your goal")
         return []
 
