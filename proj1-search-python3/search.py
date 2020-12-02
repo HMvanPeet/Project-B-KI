@@ -67,6 +67,31 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
+def graphSearch(problem, openList):
+    """ Generic graph search """
+    closedList = set()
+    state = problem.getStartState()
+    route = []
+    currentNode = (state, route)
+    openList.push(currentNode)
+
+    #start state could be a goal state        
+    if problem.isGoalState(currentNode):
+        print("The startpoint is your goal")
+        return []
+
+    
+    while True:
+        if openList.isEmpty():
+            return[]
+        currentNode = openList.pop()
+        state, route = currentNode
+        if problem.isGoalState(state):
+            return route
+        if state not in closedList:
+            closedList.add(state)
+            for child in problem.getSuccessors(state):
+                openList.push((child[0], route + [child[1]]))
 
 def tinyMazeSearch(problem):
     """
@@ -90,73 +115,28 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    from util import Stack
 
-    openList = Stack()
-    closedList = {}
-    currentNode = [problem.getStartState(), "Start", "non"]
-
-    #start state could be a goal state        
-    if problem.isGoalState(currentNode):
-        print("The startpoint is your goal")
-        return []
-
-    openList.push(currentNode)
-    while not openList.isEmpty():
-        currentNode = openList.pop()
-        closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
-        if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
-            route = []
-            route.append(currentNode[2])                              #add last action to child
-            reached = closedList[currentNode[0]]['from']         #parent node
-            while reached != problem.getStartState():   #only start node has start in that index
-                route.insert(0, closedList[reached]['movement'])
-                reached = closedList[reached]['from']
-            return route
-        children = problem.getSuccessors(currentNode[0])
-        for child in children:
-            if not child[0] in closedList:
-                openList.push([child[0], currentNode[0], child[1]])
-        
-
+    return graphSearch(problem, util.Stack())
 
     util.raiseNotDefined()
                 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    from util import Queue
 
-    openList = Queue()
-    closedList = {}
-    currentNode = [problem.getStartState(), (-1,-1), "non"]
-
-    openList.push(currentNode)
-    while not openList.isEmpty():
-        currentNode = openList.pop()
-        if currentNode[0] in closedList:
-            continue
-        closedList[currentNode[0]] = {"from" : currentNode[1], "movement" : currentNode[2]}
-        if problem.isGoalState(currentNode[0]):                       #first complete path is enough (not shortest)
-            route = []
-            route.append(currentNode[2])                              #add last action to child
-            reached = closedList[currentNode[0]]['from']                   #parent node
-            while reached != problem.getStartState():   #only start node has start in that index
-                route.insert(0, closedList[reached]['movement'])
-                reached = closedList[reached]['from']
-            return route
-        children = problem.getSuccessors(currentNode[0])
-        for child in children:
-            if not child[0] in closedList:
-                openList.push([child[0], currentNode[0], child[1]])
-        
-
+    return graphSearch(problem, util.Queue())
 
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    priorityFunction = (lambda node: problem.getCostOfActions(node[1]))
+    p_queue = util.PriorityQueueWithFunction(priorityFunction)
+
+    return graphSearch(problem, p_queue)
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -169,6 +149,11 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    priorityFunction = (lambda node: problem.getCostOfActions(node[1]) + heuristic(node[0], problem))
+    p_queue = util.PriorityQueueWithFunction(priorityFunction)
+
+    return graphSearch(problem, p_queue)
+
     util.raiseNotDefined()
 
 
