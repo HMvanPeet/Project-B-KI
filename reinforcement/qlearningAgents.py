@@ -52,11 +52,12 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
-        
+        if not state in self.values:
+          self.values[state] = {}
+          for x in self.getLegalActions(state):
+            self.values[state][x] = 0
         return self.values[state][action]
-        
-        util.raiseNotDefined()
-
+      
     def computeValueFromQValues(self, state):
         """
           Returns max_action Q(state,action)
@@ -65,10 +66,8 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        action = self.getAction(state)
-        if action == None:
-          return 0.0
-        return self.values[state][action]
+        action = self.computeActionFromQValues(state)
+        return self.getQValue(state, action)
 
         util.raiseNotDefined()
 
@@ -81,11 +80,11 @@ class QLearningAgent(ReinforcementAgent):
         "*** YOUR CODE HERE ***"
         actions = self.getLegalActions(state)
         bestAction = actions[0]
-        actionValue = self.values[state][actions[0]]
+        actionValue = self.getQValue(state, actions[0])
         for action in actions:
-          if self.values[state][action] > actionValue:
+          if self.getQValue(state, action) > actionValue:
             bestAction = action
-            actionValue = self.values[state][action]
+            actionValue = self.getQValue(state, action)
         return bestAction
 
 
@@ -105,10 +104,6 @@ class QLearningAgent(ReinforcementAgent):
         "*** YOUR CODE HERE ***"
         
         actions = self.getLegalActions(state)
-        if not state in self.values:
-          self.values[state] = {}
-          for action in actions:
-            self.values[state][action] = 0
         
         if util.flipCoin(self.epsilon):
           return random.choice(actions)
@@ -125,10 +120,16 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        if not state in self.values:
-          return
-        expected = self.values[state][action]
-        sample = self.values[nextState][self.computeActionFromQValues] * self.discount 
+        # if not state in self.values:
+        #   self.values[state] = {}
+        #   for action in self.getLegalActions(state):
+        #     self.values[state][action] = 0
+        
+        expected = self.getQValue(state, action)
+        if nextState == 'TERMINAL_STATE':
+          sample = reward
+        else:
+          sample = reward + (self.getQValue(nextState, self.computeActionFromQValues(nextState)) * self.discount) 
         self.values[state][action] = ((1 - self.alpha) * expected) + (self.alpha * sample)
 
     def getPolicy(self, state):
