@@ -43,7 +43,7 @@ class QLearningAgent(ReinforcementAgent):
         ReinforcementAgent.__init__(self, **args)
 
         "*** YOUR CODE HERE ***"
-        self.values = {}
+        self.values = {}    #dictionary to keep track of Qvalues
         
     def getQValue(self, state, action):
         """
@@ -52,10 +52,11 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
-        if not state in self.values:
-          self.values[state] = {}
-          for x in self.getLegalActions(state):
+        if not state in self.values:    #if state has not been visited
+          self.values[state] = {}       #add the state to the value dictionary with another dictionary as value
+          for x in self.getLegalActions(state):   #and add all its legal actions to its dictionary
             self.values[state][x] = 0
+            
         return self.values[state][action]
       
     def computeValueFromQValues(self, state):
@@ -66,8 +67,7 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        action = self.computeActionFromQValues(state)
-        return self.getQValue(state, action)
+        return self.getQValue(state, self.computeActionFromQValues(state))
 
         util.raiseNotDefined()
 
@@ -78,8 +78,12 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
+        #best action is selected
         actions = self.getLegalActions(state)
-        bestAction = actions[0]
+        if state == 'TERMINAL_STATE':
+          return None
+          
+        bestAction = actions[0]                           #if all actions are equally good, the first in the list is selected
         actionValue = self.getQValue(state, actions[0])
         for action in actions:
           if self.getQValue(state, action) > actionValue:
@@ -102,7 +106,7 @@ class QLearningAgent(ReinforcementAgent):
           HINT: To pick randomly from a list, use random.choice(list)
         """
         "*** YOUR CODE HERE ***"
-        
+        #a random action or the optimal action is selected
         actions = self.getLegalActions(state)
         
         if util.flipCoin(self.epsilon):
@@ -120,13 +124,9 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        # if not state in self.values:
-        #   self.values[state] = {}
-        #   for action in self.getLegalActions(state):
-        #     self.values[state][action] = 0
         
         expected = self.getQValue(state, action)
-        if nextState == 'TERMINAL_STATE':
+        if nextState == 'TERMINAL_STATE':       #in the goal state, the nextState is a terminal state and therefor there is no future reward
           sample = reward
         else:
           sample = reward + (self.getQValue(nextState, self.computeActionFromQValues(nextState)) * self.discount) 
