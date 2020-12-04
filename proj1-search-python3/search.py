@@ -132,7 +132,7 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
-    priorityFunction = (lambda node: problem.getCostOfActions(node[1]))
+    priorityFunction = (lambda currentNode: problem.getCostOfActions(currentNode[1]))
     p_queue = util.PriorityQueueWithFunction(priorityFunction)
 
     return graphSearch(problem, p_queue)
@@ -149,7 +149,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    priorityFunction = (lambda node: problem.getCostOfActions(node[1]) + heuristic(node[0], problem))
+    priorityFunction = (lambda currentNode: problem.getCostOfActions(currentNode[1]) + heuristic(currentNode[0], problem))
     p_queue = util.PriorityQueueWithFunction(priorityFunction)
 
     return graphSearch(problem, p_queue)
