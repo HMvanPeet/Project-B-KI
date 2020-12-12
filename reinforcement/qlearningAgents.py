@@ -80,7 +80,9 @@ class QLearningAgent(ReinforcementAgent):
         "*** YOUR CODE HERE ***"
         #best action is selected
         actions = self.getLegalActions(state)
-        if state == 'TERMINAL_STATE':
+        #print(state)
+        if len(actions) == 0:
+          self.values[state] = {None:0}
           return None
           
         bestAction = actions[0]                           #if all actions are equally good, the first in the list is selected
