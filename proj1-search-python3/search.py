@@ -68,11 +68,14 @@ class SearchProblem:
         util.raiseNotDefined()
 
 def graphSearch(problem, openList):
-    """ Generic graph search """
-    closedList = set()
+    """ 
+    It receives the problem that needs to be solved and the data structure needed
+    to return the right answer. Returns a sequence of moves that solves the given problem
+    """
     state = problem.getStartState()
     route = []
     currentNode = (state, route)
+    closedList = set()
     openList.push(currentNode)
 
     #start state could be a goal state        
@@ -80,7 +83,8 @@ def graphSearch(problem, openList):
         print("The startpoint is your goal")
         return []
 
-    
+    # This loop will go on until openList is empty (no solution = returns empty set)
+    # or if a solution is found (returns sequence of actions)
     while True:
         if openList.isEmpty():
             return[]
@@ -116,6 +120,7 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
+    # DFS uses a stack. The following code gives the problem and a stack to graphSearch
     return graphSearch(problem, util.Stack())
 
     util.raiseNotDefined()
@@ -124,6 +129,7 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
+    # BFS uses a queue. The following code gives the problem and a queue to graphSearch
     return graphSearch(problem, util.Queue())
 
     util.raiseNotDefined()
@@ -132,6 +138,8 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
+    # priorityFunction gets the cost of actions
+    # UCS uses a priority-stack. The following code gives the problem and a priority-stack to graphSearch
     priorityFunction = (lambda currentNode: problem.getCostOfActions(currentNode[1]))
     p_queue = util.PriorityQueueWithFunction(priorityFunction)
 
@@ -149,6 +157,9 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+
+    # priorityFunction gets the cost of actions and uses a heuristic
+    # A* uses a priority-stack. The following code gives the problem and a priority-stack to graphSearch
     priorityFunction = (lambda currentNode: problem.getCostOfActions(currentNode[1]) + heuristic(currentNode[0], problem))
     p_queue = util.PriorityQueueWithFunction(priorityFunction)
 
