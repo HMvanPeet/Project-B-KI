@@ -82,7 +82,7 @@ class QLearningAgent(ReinforcementAgent):
         actions = self.getLegalActions(state)
         #print(state)
         if len(actions) == 0:
-          self.values[state] = {None:0}
+          self.values[state] = {None:0}   #we could not run exercise 12 without this line
           return None
           
         bestAction = actions[0]                           #if all actions are equally good, the first in the list is selected
